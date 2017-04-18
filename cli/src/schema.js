@@ -65,10 +65,6 @@ const parseArguments = (args) => {
       { type: 'string', metavar: 'yes|no', constant: 'yes', nargs: '?',
         help: 'Start up a RethinkDB server in the current directory' });
 
-    subcmd.addArgument([ '--config' ],
-      { type: 'string', metavar: 'PATH',
-        help: 'Path to the config file to use, defaults to ".hz/config.toml".' });
-
     subcmd.addArgument([ '--debug' ],
       { type: 'string', metavar: 'yes|no', constant: 'yes', nargs: '?',
         help: 'Enable debug logging.' });
@@ -189,7 +185,7 @@ const processApplyConfig = (parsed) => {
 
   options = config.default_options();
   options = config.merge_options(options,
-    config.read_from_config_file(parsed.project_path, parsed.config));
+    config.read_from_config_file(parsed.project_path));
   options = config.merge_options(options, config.read_from_env());
   options = config.merge_options(options, config.read_from_flags(parsed));
 
@@ -208,6 +204,8 @@ const processApplyConfig = (parsed) => {
     start_rethinkdb: options.start_rethinkdb,
     rdb_host: options.rdb_host,
     rdb_port: options.rdb_port,
+    rdb_user: options.rdb_user || undefined,
+    rdb_password: options.rdb_password || undefined,
     project_name: options.project_name,
     project_path: options.project_path,
     debug: options.debug,
@@ -224,7 +222,7 @@ const processSaveConfig = (parsed) => {
   options.start_rethinkdb = true;
 
   options = config.merge_options(options,
-    config.read_from_config_file(parsed.project_path, parsed.config));
+    config.read_from_config_file(parsed.project_path));
   options = config.merge_options(options, config.read_from_env());
   options = config.merge_options(options, config.read_from_flags(parsed));
 
@@ -243,6 +241,8 @@ const processSaveConfig = (parsed) => {
     start_rethinkdb: options.start_rethinkdb,
     rdb_host: options.rdb_host,
     rdb_port: options.rdb_port,
+    rdb_user: options.rdb_user || undefined,
+    rdb_password: options.rdb_password || undefined,
     project_name: options.project_name,
     project_path: options.project_path,
     debug: options.debug,
